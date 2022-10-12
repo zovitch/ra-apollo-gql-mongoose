@@ -1,6 +1,7 @@
 const { ApolloServer } = require('apollo-server');
 const dotenv = require('dotenv').config();
 const colors = require('colors');
+const cors = require('cors');
 
 const connectDB = require('./config/db');
 
@@ -15,6 +16,11 @@ connectDB();
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  csrfPrevention: true,
+  cors: {
+    origin: '*',
+    credentials: true,
+  },
 });
 
 server.listen({ port }).then(({ url }) => {

@@ -112,14 +112,41 @@ module.exports = {
   // Query resolvers
   // Query needs to be async because Mongoose return a Promise
   Query: {
-    async user(_, { id }) {
+    async User(_, { id }) {
       return await User.findById(id);
     },
 
-    async users() {
+    async allUsers(_, { page, perPage, sortField, sortOrder, filter }) {
+      const options = {
+        page: page || 1,
+        limit: perPage || 10,
+        sort: { [sortField]: sortOrder || 1 },
+        populate: 'createdBy',
+        select: '-password',
+      };
+
       try {
         const users = await User.find();
         return users;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+
+    async _allUsersMeta(_, { page, perPage, sortField, sortOrder, filter }) {
+      const options = {
+        page: page || 1,
+        limit: perPage || 10,
+        sort: { [sortField]: sortOrder || 1 },
+        populate: 'createdBy',
+        select: '-password',
+      };
+
+      try {
+        const users = await User.find();
+        return {
+          count: users.length,
+        };
       } catch (err) {
         throw new Error(err);
       }

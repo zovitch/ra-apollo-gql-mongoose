@@ -49,14 +49,43 @@ module.exports = {
   // Query resolvers for message
   // Query needs to be async because Mongoose return a Promise
   Query: {
-    async message(_, { id }) {
+    async Message(_, { id }) {
       return await Message.findById(id);
     },
 
-    async messages() {
+    async allMessages(_, { page, perPage, sortField, sortOrder, filter }) {
+      const options = {
+        page: page || 1,
+        limit: perPage || 10,
+        sort: { [sortField]: sortOrder || 'asc' },
+        collation: {
+          locale: 'en',
+        },
+      };
+
       try {
         const messages = await Message.find();
         return messages;
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+
+    async _allMessagesMeta(_, { page, perPage, sortField, sortOrder, filter }) {
+      const options = {
+        page: page || 1,
+        limit: perPage || 10,
+        sort: { [sortField]: sortOrder || 'asc' },
+        collation: {
+          locale: 'en',
+        },
+      };
+
+      try {
+        const messages = await Message.find();
+        return {
+          count: messages.length,
+        };
       } catch (err) {
         throw new Error(err);
       }

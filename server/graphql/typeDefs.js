@@ -29,6 +29,7 @@ module.exports = gql`
     username: String
     email: String
     password: String
+    confirmPassword: String
   }
 
   input LoginInput {
@@ -42,11 +43,79 @@ module.exports = gql`
     password: String
   }
 
+  input UserFilter {
+    q: String
+    id: ID
+    username: String
+    email: String
+  }
+
+  input MessageFilter {
+    q: String
+    id: ID
+    text: String
+    text_contains: String
+    text_startsWith: String
+    text_endsWith: String
+    text_not: String
+    text_in: [String]
+    text_not_in: [String]
+    createdAt: String
+    createdAt_lt: String
+    createdAt_lte: String
+    createdAt_gt: String
+    createdAt_gte: String
+    createdBy: String
+    createdBy_contains: String
+    createdBy_startsWith: String
+    createdBy_endsWith: String
+    createdBy_not: String
+    createdBy_in: [String]
+    createdBy_not_in: [String]
+  }
+
+  type ListMetadata {
+    count: Int!
+  }
+
+  scalar Date
+
   type Query {
-    message(id: ID!): Message!
-    messages: [Message]
-    user(id: ID!): User!
-    users: [User]
+    Message(id: ID!): Message!
+
+    allMessages(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+      filter: MessageFilter
+    ): [Message]
+
+    _allMessagesMeta(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+      filter: MessageFilter
+    ): ListMetadata
+
+    User(id: ID!): User!
+
+    allUsers(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+      filter: UserFilter
+    ): [User]
+
+    _allUsersMeta(
+      page: Int
+      perPage: Int
+      sortField: String
+      sortOrder: String
+      filter: UserFilter
+    ): ListMetadata
   }
 
   type Mutation {
