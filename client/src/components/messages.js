@@ -18,7 +18,7 @@ function MessageList() {
       <Datagrid rowClick='edit'>
         <TextField source='text' />
         <DateField source='createdAt' />
-        <TextField source='createdBy' />=
+        <TextField source='createdBy' />
       </Datagrid>
     </List>
   );
